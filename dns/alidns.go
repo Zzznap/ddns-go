@@ -74,10 +74,18 @@ func (ali *Alidns) addUpdateDomainRecords(recordType string) {
 		var records AlidnsSubDomainRecords
 		// 获取当前域名信息
 		params := domain.GetCustomParams()
-		params.Set("Action", "DescribeSubDomainRecords")
-		params.Set("DomainName", domain.DomainName)
-		params.Set("SubDomain", domain.GetFullDomain())
-		params.Set("Type", recordType)
+		if !params.Has("Action") {
+			params.Set("Action", "DescribeSubDomainRecords")
+		}
+		if !params.Has("DomainName") {
+			params.Set("DomainName", domain.DomainName)
+		}
+		if !params.Has("SubDomain") {
+			params.Set("SubDomain", domain.GetFullDomain())
+		}
+		if !params.Has("SubDomain") {
+			params.Set("Type", recordType)
+		}
 		err := ali.request(params, &records)
 
 		if err != nil {
